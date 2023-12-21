@@ -1,57 +1,63 @@
 #ifndef _LOGGER_HPP_
 #define _LOGGER_HPP_
 
-#include <vector>
-#include <string>
-#include <iostream>
+#pragma once
 
+#include <iostream>
+#include <vector>
 
 enum LogLevel {
-    kTrace = 0,
-    kDebug,
-    kInfo,
-    kWarning,
-    kError,
+  kTrace = 0,
+  kDebug,
+  kInfo,
+  kWarning,
+  kError,
 };
 
-const std::vector<std::string> LogLevelNames = {"TRACE", "DEBUG", "INFO", 
+const std::vector<std::string> LogLevelNames = {"TRACE", "DEBUG", "INFO",
                                                 "WARNING", "ERROR"};
 
-enum OutputStream {
-    kConsole,
-    kFile,
-    kBoth
-};
-
-
+enum OutputStream {kConsole, kFile, kBoth};
+const std::vector<std::string> OutputStreamNames = {"CONSOLE", "FILE",
+                                                    "CONSOLE/FILE"};
 
 class Logger {
-public:
-    static Logger& getInstance();
+ public:
+  Logger(Logger&) = delete;
+  void operator=(const Logger&) = delete;
 
-    static void SetLogLevel(LogLevel log_level);
+  static Logger& GetInstance();
 
-    static void SetStream(OutputStream output);
+  static void SetLogLevel(const LogLevel& log_level);
+  static void SetStream(const OutputStream& output);
+  static void SetLogFile(const std::string& log_filename);
 
-    void SetLogFile(const std::string& log_filename);
+  template <typename ...Args>
+  static void Trace(const Args& ...args);
 
-    // template <typename... Args>
-    // static void Trace(const Args&... args);
+  template <typename ...Args>
+  static void Debug(const Args& ...args);
 
-private:
-    static LogLevel log_level_;
-    static OutputStream output_;
-    std::string log_filename_;
+  template <typename ...Args>
+  static void Info(const Args& ...args);
 
-    
-    // template <typename... Args>
-    // static void Log(LogLevel log_level, const Args&... args);
+  template <typename ...Args>
+  static void Warning(const Args& ...args);
 
-    Logger();
-    Logger(Logger const&) = delete;
-    void operator=(Logger const&) = delete;
+  template <typename ...Args>
+  static void Error(const Args& ...args);
+
+
+ private:
+  Logger();
+
+  static LogLevel log_level_;
+  static OutputStream output_;
+  static std::string log_filename_;
+
+  template <typename... Args>
+  static void Log(LogLevel log_level, const Args&... args);
 };
 
-
-#include "../src/Logger.cpp"
-#endif //LOGGER_HPP
+#include "../src/Logger.tpp"  // Include the template implementation
+#endif
