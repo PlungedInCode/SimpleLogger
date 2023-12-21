@@ -8,6 +8,8 @@
 #include <mutex>
 #include <vector>
 
+#define RESET_COLOR "\033[0m"
+
 enum LogLevel {
   kTrace = 0,
   kDebug,
@@ -16,8 +18,17 @@ enum LogLevel {
   kError,
 };
 
-const std::vector<std::string> LogLevelNames = {"TRACE", "DEBUG", "INFO",
-                                                "WARNING", "ERROR"};
+const std::vector<std::string> LogLevelNames = {
+    "[TRACE]   ", "[DEBUG]   ", "[INFO]    ", "[WARNING] ", "[ERROR]   "};
+
+const std::vector<std::string> LogLevelColors = {
+    "\033[1;33m",        // Yellow
+    "\033[1;34m",        // Blue
+    "\033[1;32m",        // Green
+    "\033[1;38;5;208m",  // Orange
+    "\033[1;31m",        // Red
+    "",                  // Empty
+};
 
 enum OutputStream { kConsole, kFile, kBoth };
 const std::vector<std::string> OutputStreamNames = {"CONSOLE", "FILE",
