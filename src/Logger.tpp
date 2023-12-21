@@ -26,17 +26,22 @@ void Logger::Error(const Args&... args) {
 }
 
 template <class Head, class... Tail>
-void Printer(const Head& head, const Tail&... tail) {
-  std::cout << head;
-  ((std::cout << ' ' << tail), ...);
-  std::cout << std::endl;
+void Printer(std::ostream& out, const Head& head, const Tail&... tail) {
+  out << head;
+  ((out << ' ' << tail), ...);
+  out << std::endl;
 }
 
 template <typename... Args>
 void Logger::Log(LogLevel log_level, const Args&... args) {
-  if (log_level >= log_level_) {  
+  if (log_level >= log_level_) {
     std::scoped_lock lock(log_mutex_);
     std::string level_name = "[" + LogLevelNames[log_level] + "]\t";
-    Printer(level_name, args...);
+    if (log_output_ == OutputStream::kConsole ||
+        log_output_ == OutputStream::kBoth)
+      Printer(std::cout, level_name, args...);
+    if (log_output_ == OutputStream::kFile ||
+        log_output_ == OutputStream::kBoth)
+      Printer(log_foutput_, level_name, args...);
   }
 }

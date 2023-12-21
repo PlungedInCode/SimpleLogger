@@ -3,9 +3,10 @@
 
 #pragma once
 
+#include <fstream>
 #include <iostream>
-#include <vector>
 #include <mutex>
+#include <vector>
 
 enum LogLevel {
   kTrace = 0,
@@ -18,7 +19,7 @@ enum LogLevel {
 const std::vector<std::string> LogLevelNames = {"TRACE", "DEBUG", "INFO",
                                                 "WARNING", "ERROR"};
 
-enum OutputStream {kConsole, kFile, kBoth};
+enum OutputStream { kConsole, kFile, kBoth };
 const std::vector<std::string> OutputStreamNames = {"CONSOLE", "FILE",
                                                     "CONSOLE/FILE"};
 
@@ -33,21 +34,20 @@ class Logger {
   static void SetStream(const OutputStream& output);
   static void SetLogFile(const std::string& log_filename);
 
-  template <typename ...Args>
-  static void Trace(const Args& ...args);
+  template <typename... Args>
+  static void Trace(const Args&... args);
 
-  template <typename ...Args>
-  static void Debug(const Args& ...args);
+  template <typename... Args>
+  static void Debug(const Args&... args);
 
-  template <typename ...Args>
-  static void Info(const Args& ...args);
+  template <typename... Args>
+  static void Info(const Args&... args);
 
-  template <typename ...Args>
-  static void Warning(const Args& ...args);
+  template <typename... Args>
+  static void Warning(const Args&... args);
 
-  template <typename ...Args>
-  static void Error(const Args& ...args);
-
+  template <typename... Args>
+  static void Error(const Args&... args);
 
  private:
   Logger();
@@ -56,6 +56,8 @@ class Logger {
   static OutputStream log_output_;
   static std::string log_filename_;
   static std::mutex log_mutex_;
+
+  static std::ofstream log_foutput_;
 
   template <typename... Args>
   static void Log(LogLevel log_level, const Args&... args);
