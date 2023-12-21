@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <vector>
+#include <mutex>
 
 enum LogLevel {
   kTrace = 0,
@@ -52,8 +53,9 @@ class Logger {
   Logger();
 
   static LogLevel log_level_;
-  static OutputStream output_;
+  static OutputStream log_output_;
   static std::string log_filename_;
+  static std::mutex log_mutex_;
 
   template <typename... Args>
   static void Log(LogLevel log_level, const Args&... args);

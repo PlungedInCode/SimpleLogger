@@ -1,9 +1,10 @@
-#include "../include/Logger.hpp"
+#include "Logger.hpp"
 
+// Initializing Logger's static members 
 LogLevel Logger::log_level_ = LogLevel::kInfo;
-OutputStream Logger::output_ = OutputStream::kConsole;
+OutputStream Logger::log_output_ = OutputStream::kConsole;
 std::string Logger::log_filename_ = "log.txt";
-
+std::mutex Logger::log_mutex_;
 
 Logger::Logger() {
 }
@@ -18,7 +19,7 @@ void Logger::SetLogLevel(const LogLevel& log_level) {
 }
 
 void Logger::SetStream(const OutputStream& output) {
-    output_ = output;
+    log_output_ = output;
 }
 
 void Logger::SetLogFile(const std::string& log_filename) {

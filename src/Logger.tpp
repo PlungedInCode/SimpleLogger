@@ -34,8 +34,9 @@ void Printer(const Head& head, const Tail&... tail) {
 
 template <typename... Args>
 void Logger::Log(LogLevel log_level, const Args&... args) {
-  if (log_level >= log_level_) {
-    std::string level_name = "[" + LogLevelNames[log_level] + "] -";
+  if (log_level >= log_level_) {  
+    std::scoped_lock lock(log_mutex_);
+    std::string level_name = "[" + LogLevelNames[log_level] + "]\t";
     Printer(level_name, args...);
   }
 }
