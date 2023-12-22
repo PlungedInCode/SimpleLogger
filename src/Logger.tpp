@@ -26,13 +26,21 @@ void Logger::Error(const Args&... args) {
 }
 
 template <class Head, class... Tail>
-void Printer(std::string& level_color, std::ostream& out, const Head& head,
+void Printer(bool time_stamp, std::string& level_color, std::ostream& out, const Head& head,
              const Tail&... tail) {
-  if (!level_color.empty()) out << level_color;
+  if (level_color != NO_COLOR) out << level_color;
+
+  if (time_stamp) {
+    auto currentTime = std::chrono::system_clock::now();
+    std::time_t currentTime_t = std::chrono::system_clock::to_time_t(currentTime);
+    std::tm* localTime = std::localtime(&currentTime_t);
+    out << std::put_time(localTime, "%Y-%m-%d %H:%M:%S") << "\t";
+  }
 
   out << head;
   ((out << ' ' << tail), ...);
-  if (!level_color.empty()) out << RESET_COLOR;
+
+  if (level_color != NO_COLOR) out << RESET_COLOR;
 
   out << std::endl;
 }
@@ -46,13 +54,13 @@ void Logger::Log(LogLevel log_level, const Args&... args) {
     std::string level_color = LogLevelColors[log_level];
     if (log_output_ == OutputStream::kConsole ||
         log_output_ == OutputStream::kBoth) {
-      Printer(level_color, std::cout, level_name, args...);
+      Printer(time_stamp_, level_color, std::cout, level_name, args...);
     }
 
     if (log_output_ == OutputStream::kFile ||
         log_output_ == OutputStream::kBoth) {
-      level_color = "";
-      Printer(level_color, log_foutput_, level_name, args...);
+      level_color = NO_COLOR;
+      Printer(time_stamp_, level_color, log_foutput_, level_name, args...);
     }
   }
 }

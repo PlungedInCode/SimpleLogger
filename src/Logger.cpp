@@ -7,6 +7,7 @@ OutputStream Logger::log_output_ = OutputStream::kConsole;
 std::string Logger::log_filename_ = "log.txt";
 std::mutex Logger::log_mutex_;
 std::ofstream Logger::log_foutput_;
+bool Logger::time_stamp_ = true;
 
 Logger::Logger() {}
 
@@ -37,3 +38,7 @@ void Logger::SetLogFile(const std::string& log_filename) {
     // SetStream(log_output_);
   }
 }
+
+void Logger::EnableTimeStamp() { time_stamp_ = true; }
+
+void Logger::DisableTimeStamp() { time_stamp_ = false; }

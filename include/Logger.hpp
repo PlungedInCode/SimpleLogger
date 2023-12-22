@@ -1,14 +1,16 @@
 #ifndef _LOGGER_HPP_
 #define _LOGGER_HPP_
 
-#pragma once
 
-#include <fstream>
 #include <iostream>
-#include <mutex>
+#include <fstream>
+#include <iomanip>
 #include <vector>
+#include <chrono>
+#include <mutex>
 
 #define RESET_COLOR "\033[0m"
+#define NO_COLOR ""
 
 enum LogLevel {
   kTrace = 0,
@@ -32,7 +34,7 @@ const std::vector<std::string> LogLevelColors = {
 
 enum OutputStream { kConsole, kFile, kBoth };
 const std::vector<std::string> OutputStreamNames = {"CONSOLE", "FILE",
-                                                    "CONSOLE/FILE"};
+                                                    "CONSOLE/FILE"}; // I don't think that i need this...
 
 class Logger {
  public:
@@ -44,6 +46,8 @@ class Logger {
   static void SetLogLevel(const LogLevel& log_level);
   static void SetStream(const OutputStream& output);
   static void SetLogFile(const std::string& log_filename);
+  static void EnableTimeStamp();
+  static void DisableTimeStamp();
 
   template <typename... Args>
   static void Trace(const Args&... args);
@@ -67,8 +71,8 @@ class Logger {
   static OutputStream log_output_;
   static std::string log_filename_;
   static std::mutex log_mutex_;
-
   static std::ofstream log_foutput_;
+  static bool time_stamp_;
 
   template <typename... Args>
   static void Log(LogLevel log_level, const Args&... args);
