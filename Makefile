@@ -9,6 +9,7 @@ LIB		:= lib
 LIBRARIES	:=
 EXECUTABLE	:= main
 
+CPPCHECK = cppcheck
 
 all: $(BIN)/$(EXECUTABLE)
 
@@ -21,3 +22,7 @@ $(BIN)/$(EXECUTABLE): $(SRC)/*.cpp
 
 clean:
 	-rm $(BIN)/*
+
+cppcheck:
+	@$(CPPCHECK) --quiet --enable=all --error-exitcode=1 --inline-suppr \
+		-I $(INCLUDE) $(SRC) -i external/printf --suppress=missingIncludeSystem .
