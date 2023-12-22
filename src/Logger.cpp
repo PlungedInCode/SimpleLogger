@@ -1,44 +1,47 @@
 #include "Logger.hpp"
-// #include "../include/Logger.hpp"
 
-// Initializing Logger's static members
-LogLevel Logger::log_level_ = LogLevel::kInfo;
-OutputStream Logger::log_output_ = OutputStream::kConsole;
-std::string Logger::log_filename_ = "log.txt";
-std::mutex Logger::log_mutex_;
-std::ofstream Logger::log_foutput_;
-bool Logger::time_stamp_ = true;
-
-Logger::Logger() {}
+Logger::Logger()
+    : log_level_(LogLevel::kInfo),
+      log_output_(OutputStream::kConsole),
+      log_filename_("log.txt"),
+      time_stamp_(true),
+      file_stamp_(true) {}
 
 Logger& Logger::GetInstance() {
   static Logger instance;
   return instance;
 }
 
-void Logger::SetLogLevel(const LogLevel& log_level) { log_level_ = log_level; }
+void Logger::SetLogLevel(const LogLevel& log_level) {
+  GetInstance().log_level_ = log_level;
+}
 
 void Logger::SetStream(const OutputStream& output) {
-  std::scoped_lock lock(log_mutex_);
-  log_output_ = output;
-  if (log_output_ == kBoth || log_output_ == kFile) {
-    if (!log_foutput_.is_open()) {
-      log_foutput_.open(log_filename_, std::ios::app);
+  auto& logger = GetInstance();
+  std::scoped_lock lock(logger.log_mutex_);
+  logger.log_output_ = output;
+  if (logger.log_output_ == kBoth || logger.log_output_ == kFile) {
+    if (!logger.log_foutput_.is_open()) {
+      logger.log_foutput_.open(logger.log_filename_, std::ios::app);
     }
   }
-  if (log_output_ == kConsole)
-    if (log_foutput_.is_open()) log_foutput_.close();
+  if (logger.log_output_ == kConsole)
+    if (logger.log_foutput_.is_open()) logger.log_foutput_.close();
 }
 
 void Logger::SetLogFile(const std::string& log_filename) {
-  log_filename_ = log_filename;
-  if (log_foutput_.is_open()) {
-    log_foutput_.close();
-    log_foutput_.open(log_filename_, std::ios::app);
-    // SetStream(log_output_);
+  auto& logger = GetInstance();
+  logger.log_filename_ = log_filename;
+  if (logger.log_foutput_.is_open()) {
+    logger.log_foutput_.close();
+    logger.log_foutput_.open(logger.log_filename_, std::ios::app);
   }
 }
 
-void Logger::EnableTimeStamp() { time_stamp_ = true; }
+void Logger::EnableTimeStamp() { GetInstance().time_stamp_ = true; }
 
-void Logger::DisableTimeStamp() { time_stamp_ = false; }
+void Logger::DisableTimeStamp() { GetInstance().time_stamp_ = false; }
+
+void Logger::EnableFileStamp() { GetInstance().file_stamp_ = true; }
+
+void Logger::DisableFileStamp() { GetInstance().file_stamp_ = false; }
