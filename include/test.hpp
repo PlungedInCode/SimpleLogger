@@ -1,14 +1,17 @@
 #ifndef TEST_HPP
 #define TEST_HPP
+
 #include <iostream>
 #include <string>
 #include <thread>
+
+#include "Logger.hpp"
 
 using std::istream;
 using std::ostream;
 
 struct A {
-  A(std::string name, std::string description, float value, int count)
+  A(const std::string& name, const std::string& description, float value, int count)
       : name_(name), description_(description), value_(value), count_(count) {}
 
   friend std::ostream& operator<<(std::ostream& os, const A& a);
@@ -68,20 +71,20 @@ void test(int N) {
   A a("Name", "Discrption", 3.0, 4);
   Date date(12 + N, 21 / N, 2023 - N);
   Complex complex(3 * 2 * N, 2 * N);
-  Logger::Debug(N, a, date, complex);
+  LOG_DEBUG(N, a, date, complex);
 }
 
-void threadFunction(int n) { Logger::Info(n); }
+void threadFunction(int n) {LOG_INFO(n); }
 
-void threadTest() {
-  std::thread threads[12];
+void threadTest(int n) {
+  std::thread threads[n];
 
-  for (int i = 0; i < 10; i++) {
-    threads[i] = std::thread(threadFunction, i);
-    if (i == 5) Logger::SetStream(kBoth);
+  for (int i = 0; i < n; i++) {
+    threads[i] = std::thread(threadFunction, i * n);
+    if (i == n / 2) Logger::SetStream(kBoth);
   }
 
-  for (int i = 0; i < 10; i++) {
+  for (int i = 0; i < n; i++) {
     threads[i].join();
   }
 }
@@ -92,17 +95,17 @@ void runTest() {
   Logger::SetLogLevel(LogLevel::kTrace);
 
   logger.SetStream(OutputStream::kBoth);
-  logger.Warning("1", 2, "3", "4", "5", 6, "7");
+  LOG_WARNING("1", 2, "3", "4", "5", 6, "7");
 
-  logger.Warning("1", 2, "3", "4", "5", 6, "7");
-  Logger::SetLogFile("log11.txt");
+  LOG_TRACE("1", 2, "3", "4", "5", 6, "7");
+  LOG_ERROR("Hello", ",", "World", "!", "2", "*", 2.4, "=", 4.8);
+
+  Logger::SetLogFile("log1.txt");
 
   Logger::SetStream(OutputStream::kFile);
+  LOG_ERROR("Hello", ",", "World", "!", "2", "*", 2.4, "=", 4.8);
+  LOG_WARNING("1", 2, "3", "4", "5", 6, "7");
 
-  Logger::Error("Hello", ",", "World", "!", "2", "*", 2.4, "=", 4.8);
-  logger.Warning("1", 2, "3", "4", "5", 6, "7");
-  logger.Warning("1", 2, "3", "4", "5", 6, "7");
-  logger.Warning("1", 2, "3", "4", "5", 6, "7");
 
   test(1);
 
@@ -114,13 +117,19 @@ void runTest() {
 
   Logger::SetStream(OutputStream::kFile);
 
-  threadTest();
-  Logger::SetStream(OutputStream::kBoth);
-  Logger::Warning("1", 2, "3", "4", "5", 6, "7");
-  Logger::SetLogFile("log11.txt");
+  Logger::DisableFileStamp();
+  Logger::DisableTimeStamp();
+  threadTest(14);
 
-  Logger::Error("Hello", ",", "World", "!", "2", "*", 2.4, "=", 4.8);
-  Logger::Warning("1", 2, "3", "4", "5", 6, "7");
+  Logger::SetStream(OutputStream::kBoth);
+  LOG_WARNING("1", 2, "3", "4", "5", 6, "7");
+  Logger::SetLogFile("log.txt");
+
+  Logger::EnableFileStamp();
+  Logger::EnableTimeStamp();
+  LOG_WARNING("1", 2, "3", "4", "5", 6, "7");  
+  LOG_ERROR("Hello", ",", "World", "!", "2", "*", 2.4, "=", 4.8);
+  threadTest(13);
 }
 
 #endif  // TEST_HPP
