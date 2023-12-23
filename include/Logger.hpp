@@ -52,21 +52,25 @@ class Logger {
   static void EnableFileStamp();
   static void DisableFileStamp();
 
+  template <typename... Args>
+  static void Trace(int line_number, const std::string& file_name,
+                    const Args&... args);
 
   template <typename... Args>
-  static void Trace(int line_number, const std::string& file_name, const Args&... args);
+  static void Debug(int line_number, const std::string& file_name,
+                    const Args&... args);
 
   template <typename... Args>
-  static void Debug(int line_number, const std::string& file_name, const Args&... args);
+  static void Info(int line_number, const std::string& file_name,
+                   const Args&... args);
 
   template <typename... Args>
-  static void Info(int line_number, const std::string& file_name, const Args&... args);
+  static void Warning(int line_number, const std::string& file_name,
+                      const Args&... args);
 
   template <typename... Args>
-  static void Warning(int line_number, const std::string& file_name, const Args&... args);
-
-  template <typename... Args>
-  static void Error(int line_number, const std::string& file_name, const Args&... args);
+  static void Error(int line_number, const std::string& file_name,
+                    const Args&... args);
 
  private:
   Logger();
@@ -83,13 +87,11 @@ class Logger {
   void Log(LogLevel log_level, const Args&... args);
 };
 
-
-#define LOG_TRACE(...)    (Logger::Trace(__LINE__, __FILE__, __VA_ARGS__))
-#define LOG_INFO(...)     (Logger::Info(__LINE__, __FILE__, __VA_ARGS__))
-#define LOG_DEBUG(...)    (Logger::Debug(__LINE__, __FILE__, __VA_ARGS__))
-#define LOG_WARNING(...)  (Logger::Warning(__LINE__, __FILE__, __VA_ARGS__))
-#define LOG_ERROR(...)    (Logger::Error(__LINE__, __FILE__, __VA_ARGS__))
-
+#define LOG_TRACE(...) (Logger::Trace(__LINE__, __FILE__, __VA_ARGS__))
+#define LOG_INFO(...) (Logger::Info(__LINE__, __FILE__, __VA_ARGS__))
+#define LOG_DEBUG(...) (Logger::Debug(__LINE__, __FILE__, __VA_ARGS__))
+#define LOG_WARNING(...) (Logger::Warning(__LINE__, __FILE__, __VA_ARGS__))
+#define LOG_ERROR(...) (Logger::Error(__LINE__, __FILE__, __VA_ARGS__))
 
 #include "../src/Logger.tpp"  // Include the template implementation
 #endif

@@ -10,11 +10,12 @@
 using std::istream;
 using std::ostream;
 
-struct A {
-  A(const std::string& name, const std::string& description, float value, int count)
+struct Item {
+  Item(const std::string& name, const std::string& description, float value,
+    int count)
       : name_(name), description_(description), value_(value), count_(count) {}
 
-  friend std::ostream& operator<<(std::ostream& os, const A& a);
+  friend std::ostream& operator<<(std::ostream& os, const Item& a);
 
  private:
   std::string name_;
@@ -23,7 +24,7 @@ struct A {
   int count_;
 };
 
-std::ostream& operator<<(std::ostream& os, const A& a) {
+std::ostream& operator<<(std::ostream& os, const Item& a) {
   os << a.name_ << " - " << a.description_ << " = " << a.count_ << "*"
      << a.value_;
   return os;
@@ -68,13 +69,13 @@ ostream& operator<<(ostream& out, const Complex& c) {
 //----------------------------------------------------------------
 
 void test(int N) {
-  A a("Name", "Discrption", 3.0, 4);
+  Item a("Name", "Discrption", 3.0, 4);
   Date date(12 + N, 21 / N, 2023 - N);
   Complex complex(3 * 2 * N, 2 * N);
   LOG_DEBUG(N, a, date, complex);
 }
 
-void threadFunction(int n) {LOG_INFO(n); }
+void threadFunction(int n) { LOG_INFO(n); }
 
 void threadTest(int n) {
   std::thread threads[n];
@@ -106,7 +107,6 @@ void runTest() {
   LOG_ERROR("Hello", ",", "World", "!", "2", "*", 2.4, "=", 4.8);
   LOG_WARNING("1", 2, "3", "4", "5", 6, "7");
 
-
   test(1);
 
   Logger::SetStream(OutputStream::kConsole);
@@ -127,7 +127,7 @@ void runTest() {
 
   Logger::EnableFileStamp();
   Logger::EnableTimeStamp();
-  LOG_WARNING("1", 2, "3", "4", "5", 6, "7");  
+  LOG_WARNING("1", 2, "3", "4", "5", 6, "7");
   LOG_ERROR("Hello", ",", "World", "!", "2", "*", 2.4, "=", 4.8);
   threadTest(13);
 }
