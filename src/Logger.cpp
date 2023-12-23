@@ -5,7 +5,8 @@ Logger::Logger()
       log_output_(OutputStream::kConsole),
       log_filename_("log.txt"),
       time_stamp_(true),
-      file_stamp_(true) {}
+      file_stamp_(true),
+      log_mutex_() {}
 
 Logger& Logger::GetInstance() {
   static Logger instance;
@@ -18,22 +19,27 @@ void Logger::SetLogLevel(const LogLevel& log_level) {
 
 void Logger::SetStream(const OutputStream& output) {
   auto& logger = GetInstance();
-  std::scoped_lock lock(logger.log_mutex_);
-  logger.log_output_ = output;
-  if (logger.log_output_ == kBoth || logger.log_output_ == kFile) {
-    if (!logger.log_foutput_.is_open()) {
-      logger.log_foutput_.open(logger.log_filename_, std::ios::app);
+  {
+    std::scoped_lock lock(logger.log_mutex_);
+    logger.log_output_ = output;
+    if (logger.log_output_ == kBoth || logger.log_output_ == kFile) {
+      if (!logger.log_foutput_.is_open()) {
+        logger.log_foutput_.open(logger.log_filename_, std::ios::app);
+      }
+    }
+    if (logger.log_output_ == kConsole && logger.log_foutput_.is_open()) {
+      logger.log_foutput_.close();
     }
   }
-  if (logger.log_output_ == kConsole)
-    if (logger.log_foutput_.is_open()) logger.log_foutput_.close();
 }
 
 void Logger::SetLogFile(const std::string& log_filename) {
   auto& logger = GetInstance();
-  logger.log_filename_ = log_filename;
   if (logger.log_foutput_.is_open()) {
     logger.log_foutput_.close();
+  }
+  logger.log_filename_ = log_filename;
+  if (logger.log_output_ == kBoth || logger.log_output_ == kFile) {
     logger.log_foutput_.open(logger.log_filename_, std::ios::app);
   }
 }

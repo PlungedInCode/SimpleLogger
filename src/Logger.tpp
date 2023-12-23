@@ -69,7 +69,9 @@ void Printer(bool time_stamp, std::string& level_color, std::ostream& out,
   }
 
   out << head;
-  ((out << ' ' << tail), ...);
+  if constexpr (sizeof...(tail) > 0) {
+    ((out << ' ' << tail), ...);
+  }
 
   if (level_color != NO_COLOR) out << RESET_COLOR;
 

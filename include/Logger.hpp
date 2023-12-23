@@ -35,7 +35,7 @@ const std::vector<std::string> LogLevelColors = {
 
 enum OutputStream { kConsole, kFile, kBoth };
 const std::vector<std::string> OutputStreamNames = {
-    "CONSOLE", "FILE", "CONSOLE/FILE"};  // I don't think that i need this...
+    "CONSOLE", "FILE", "CONSOLE/FILE"};
 
 class Logger {
  public:
