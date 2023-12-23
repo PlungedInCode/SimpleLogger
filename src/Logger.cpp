@@ -4,9 +4,9 @@ Logger::Logger()
     : log_level_(LogLevel::kInfo),
       log_output_(OutputStream::kConsole),
       log_filename_("log.txt"),
+      log_mutex_(),
       time_stamp_(true),
-      file_stamp_(true),
-      log_mutex_() {}
+      file_stamp_(true) {}
 
 Logger& Logger::GetInstance() {
   static Logger instance;
