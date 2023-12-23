@@ -4,4 +4,7 @@
 #include "Logger.hpp"
 #include "test.hpp"
 
-int main() { runTest(); }
+int main() { 
+    runTest(); 
+    return 0;
+}

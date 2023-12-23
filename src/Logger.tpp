@@ -23,7 +23,8 @@ void Logger::Debug(int line_number, const std::string& file_name,
 }
 
 template <typename... Args>
-void Logger::Info(int line_number, const std::string& file_name, const Args&... args) {
+void Logger::Info(int line_number, const std::string& file_name,
+                  const Args&... args) {
   if (GetInstance().file_stamp_) {
     std::string file_stamp =
         IN_FILE + file_name + ON_LINE + std::to_string(line_number);
