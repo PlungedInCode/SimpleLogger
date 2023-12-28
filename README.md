@@ -22,7 +22,7 @@ SimpleLogger is a simple C++ logging library designed for easy integration into 
 
    ```cmake
    add_subdirectory(lib/SimpleLogger)
-   target_link_libraries(your_project LoggerCPP)
+   target_link_libraries(your_project SimpleLogger)
    ```
 
 ## Getting Started
