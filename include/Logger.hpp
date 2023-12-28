@@ -51,6 +51,8 @@ class Logger {
   static void DisableTimeStamp();
   static void EnableFileStamp();
   static void DisableFileStamp();
+  static void EnableFileClearing();
+  static void DisableFileClearing();
 
   template <typename... Args>
   static void Trace(int line_number, const std::string& file_name,
@@ -82,9 +84,12 @@ class Logger {
   std::ofstream log_foutput_;
   bool time_stamp_;
   bool file_stamp_;
+  bool file_clearing_;
 
   template <typename... Args>
   void Log(LogLevel log_level, const Args&... args);
+
+  void OpenFile();
 };
 
 #define LOG_TRACE(...) (Logger::Trace(__LINE__, __FILE__, __VA_ARGS__))
