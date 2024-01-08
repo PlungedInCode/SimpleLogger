@@ -25,6 +25,14 @@ SimpleLogger is a simple C++ logging library designed for easy integration into 
    target_link_libraries(your_project SimpleLogger)
    ```
 
+### Building and runing examples:
+   ```bash
+    mkdir build && cd build
+    cmake ..
+    make
+    example/example
+   ```
+
 ## Getting Started
 
 Include the header in your C++ file:
