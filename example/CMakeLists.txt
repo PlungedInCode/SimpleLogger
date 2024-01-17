@@ -1,2 +1,2 @@
-add_executable(example example.cpp)
-target_link_libraries(example PRIVATE cxx_setup SimpleLogger)
+add_executable(LoggerExample example.cpp)
+target_link_libraries(LoggerExample PRIVATE cxx_setup SimpleLogger)
