@@ -17,8 +17,11 @@ SimpleLogger is a simple C++ logging library designed for easy integration into 
    ```bash
    git clone git@github.com:PlungedInCode/SimpleLogger.git
    ```
-
-2. Integrate it into your CMake project:
+2. Update submodules
+   ```bash
+   git submodule update --init --recursive
+   ```
+3. Integrate it into your CMake project:
 
    ```cmake
    add_subdirectory(lib/SimpleLogger)
