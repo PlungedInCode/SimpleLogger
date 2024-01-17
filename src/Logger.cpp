@@ -33,7 +33,6 @@ void Logger::SetStream(const OutputStream& output) {
     logger.log_output_ = output;
     if (logger.log_output_ == kBoth || logger.log_output_ == kFile) {
       if (!logger.log_foutput_.is_open()) {
-        // logger.log_foutput_.open(logger.log_filename_, std::ios::app);
         logger.OpenFile();
       }
     }
@@ -51,10 +50,6 @@ void Logger::SetLogFile(const std::string& log_filename) {
   logger.log_filename_ = log_filename;
   if (logger.log_output_ == kBoth || logger.log_output_ == kFile) {
     logger.OpenFile();
-    // if (logger.file_clearing_)
-    //   logger.log_foutput_.open(logger.log_filename_, std::ios::app);
-    // else
-    //   logger.log_foutput_.open(logger.log_filename_, std::ios::app);
   }
 }
 
